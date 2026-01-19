@@ -60,10 +60,6 @@
     border-radius: 8px;
     cursor: pointer;
   }
-
-  button:hover {
-    background: #1b5e20;
-  }
 </style>
 </head>
 
@@ -91,7 +87,7 @@
   const params = new URLSearchParams(window.location.search);
 
   const items = params.get("items");
-  const total = params.get("total");
+  const total = params.get("total") || 0;
   const upi   = params.get("upi");
 
   const tbody = document.getElementById("billBody");
@@ -100,9 +96,20 @@
     const itemList = items.split(",");
 
     itemList.forEach(item => {
-      const [name, price] = item.split("-");
-      const row = `<tr><td>${name}</td><td>${price}</td></tr>`;
-      tbody.innerHTML += row;
+      let name = item;
+      let price = "";
+
+      if (item.includes("-")) {
+        [name, price] = item.split("-");
+      } else {
+        const match = item.match(/^([A-Za-z]+)(\d+)$/);
+        if (match) {
+          name = match[1];
+          price = match[2];
+        }
+      }
+
+      tbody.innerHTML += `<tr><td>${name}</td><td>${price}</td></tr>`;
     });
   }
 
@@ -112,7 +119,6 @@
   function payNow() {
     const upiURL =
       `upi://pay?pa=${upi}&pn=SmartTrolley&am=${total}&cu=INR`;
-
     window.location.href = upiURL;
   }
 </script>
