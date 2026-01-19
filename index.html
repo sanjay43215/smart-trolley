@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Trolley Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 15px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    max-width: 420px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background: #222;
+    color: white;
+  }
+
+  .total {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #1b5e20;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>🛒 Smart Trolley Bill</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price (₹)</th>
+      </tr>
+    </thead>
+    <tbody id="billBody"></tbody>
+  </table>
+
+  <div class="total" id="totalAmount"></div>
+
+  <button onclick="payNow()">Pay using UPI</button>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const items = params.get("items");
+  const total = params.get("total");
+  const upi   = params.get("upi");
+
+  const tbody = document.getElementById("billBody");
+
+  if (items) {
+    const itemList = items.split(",");
+
+    itemList.forEach(item => {
+      const [name, price] = item.split("-");
+      const row = `<tr><td>${name}</td><td>${price}</td></tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+
+  document.getElementById("totalAmount").innerText =
+    "TOTAL : ₹ " + total;
+
+  function payNow() {
+    const upiURL =
+      `upi://pay?pa=${upi}&pn=SmartTrolley&am=${total}&cu=INR`;
+
+    window.location.href = upiURL;
+  }
+</script>
+
+</body>
+</html>
