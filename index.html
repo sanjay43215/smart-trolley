@@ -683,6 +683,147 @@
     }
   }
   
+  /* Payment Methods Modal */
+  .payment-amount-display {
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.1), rgba(0, 208, 132, 0.05));
+    border: 1px solid rgba(0, 208, 132, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .payment-amount-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  
+  .payment-amount-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'DM Mono', monospace;
+  }
+  
+  .payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .payment-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+  
+  .payment-option {
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .payment-option:active {
+    background: var(--surface);
+    border-color: var(--primary);
+    transform: scale(0.98);
+  }
+  
+  .payment-option-icon {
+    font-size: 32px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 208, 132, 0.1);
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  
+  .payment-option-info {
+    flex: 1;
+  }
+  
+  .payment-option-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  
+  .payment-option-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  
+  .payment-option-arrow {
+    font-size: 20px;
+    color: var(--text-muted);
+  }
+  
+  .payment-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .payment-divider::before,
+  .payment-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  
+  .payment-divider span {
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  
+  .upi-copied-info {
+    background: var(--surface-light);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+  }
+  
+  .upi-copied-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  
+  .upi-copied-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'DM Mono', monospace;
+    word-break: break-all;
+  }
+  
   /* Landscape Mode */
   @media (orientation: landscape) and (max-height: 500px) {
     .modal-content {
@@ -887,6 +1028,116 @@
   </div>
 </div>
 
+<!-- Payment Methods Modal -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">
+        <span>💳</span>
+        <span>Choose Payment Method</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="payment-amount-display">
+        <div class="payment-amount-label">Amount to Pay</div>
+        <div class="payment-amount-value">₹<span id="paymentAmount"></span></div>
+      </div>
+      
+      <div class="payment-methods">
+        <div class="payment-section-title">UPI Apps</div>
+        
+        <button class="payment-option" onclick="payWithApp('googlepay')">
+          <div class="payment-option-icon">📱</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">Google Pay</div>
+            <div class="payment-option-desc">Pay using Google Pay app</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+        
+        <button class="payment-option" onclick="payWithApp('phonepe')">
+          <div class="payment-option-icon">💜</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">PhonePe</div>
+            <div class="payment-option-desc">Pay using PhonePe app</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+        
+        <button class="payment-option" onclick="payWithApp('paytm')">
+          <div class="payment-option-icon">💙</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">Paytm</div>
+            <div class="payment-option-desc">Pay using Paytm app</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+        
+        <button class="payment-option" onclick="payWithApp('upi')">
+          <div class="payment-option-icon">🏦</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">Other UPI Apps</div>
+            <div class="payment-option-desc">BHIM, Amazon Pay, etc.</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+      </div>
+      
+      <div class="payment-divider">
+        <span>OR</span>
+      </div>
+      
+      <div class="payment-methods">
+        <div class="payment-section-title">Alternative Methods</div>
+        
+        <button class="payment-option" onclick="showQRCode(); closePaymentModal();">
+          <div class="payment-option-icon">📱</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">Scan QR Code</div>
+            <div class="payment-option-desc">Use any UPI app to scan</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+        
+        <button class="payment-option" onclick="copyUPIID()">
+          <div class="payment-option-icon">📋</div>
+          <div class="payment-option-info">
+            <div class="payment-option-name">Copy UPI ID</div>
+            <div class="payment-option-desc">Manual payment option</div>
+          </div>
+          <div class="payment-option-arrow">→</div>
+        </button>
+      </div>
+      
+      <button class="btn btn-secondary" onclick="closePaymentModal()" style="margin-top: 16px;">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- UPI ID Copied Modal -->
+<div id="copiedModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">UPI ID Copied</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">📋</div>
+      <div class="upi-copied-info">
+        <div class="upi-copied-label">UPI ID</div>
+        <div class="upi-copied-value" id="copiedUpiId"></div>
+        <div class="upi-copied-label" style="margin-top: 12px;">Amount</div>
+        <div class="upi-copied-value">₹<span id="copiedAmount"></span></div>
+      </div>
+      <div class="modal-message">Open your UPI app and send the amount to this UPI ID</div>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // Parse URL parameters
   const params = new URLSearchParams(window.location.search);
@@ -984,13 +1235,111 @@
       return;
     }
     
-    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    // Show payment methods modal
+    document.getElementById("paymentAmount").textContent = totalParam.toFixed(2);
+    document.getElementById("paymentModal").classList.add("active");
+  }
+  
+  function payWithApp(appName) {
+    let paymentURL = '';
+    const amount = totalParam.toFixed(2);
+    const encodedUPI = encodeURIComponent(upiId);
+    const encodedName = encodeURIComponent('SmartTrolley');
+    const encodedNote = encodeURIComponent('Smart Trolley Payment');
     
-    document.getElementById("successModal").classList.add("active");
+    // Different UPI intent URLs for different apps
+    switch(appName) {
+      case 'googlepay':
+        // Google Pay Intent
+        paymentURL = `tez://upi/pay?pa=${encodedUPI}&pn=${encodedName}&am=${amount}&cu=INR&tn=${encodedNote}`;
+        break;
+      case 'phonepe':
+        // PhonePe Intent
+        paymentURL = `phonepe://pay?pa=${encodedUPI}&pn=${encodedName}&am=${amount}&cu=INR&tn=${encodedNote}`;
+        break;
+      case 'paytm':
+        // Paytm Intent
+        paymentURL = `paytmmp://pay?pa=${encodedUPI}&pn=${encodedName}&am=${amount}&cu=INR&tn=${encodedNote}`;
+        break;
+      case 'upi':
+      default:
+        // Generic UPI Intent
+        paymentURL = `upi://pay?pa=${encodedUPI}&pn=${encodedName}&am=${amount}&cu=INR&tn=${encodedNote}`;
+        break;
+    }
     
+    // Try to open the payment URL
+    const paymentWindow = window.open(paymentURL, '_blank');
+    
+    // Fallback: If payment window doesn't open, show instructions
     setTimeout(() => {
-      window.location.href = upiURL;
-    }, 1500);
+      if (!paymentWindow || paymentWindow.closed || typeof paymentWindow.closed === 'undefined') {
+        closePaymentModal();
+        document.getElementById("errorMessage").textContent = 
+          `Unable to open ${getAppDisplayName(appName)}. Please try scanning the QR code or copying the UPI ID instead.`;
+        document.getElementById("errorModal").classList.add("active");
+      } else {
+        closePaymentModal();
+        document.getElementById("successModal").classList.add("active");
+      }
+    }, 1000);
+  }
+  
+  function getAppDisplayName(appName) {
+    const names = {
+      'googlepay': 'Google Pay',
+      'phonepe': 'PhonePe',
+      'paytm': 'Paytm',
+      'upi': 'UPI app'
+    };
+    return names[appName] || 'payment app';
+  }
+  
+  function closePaymentModal() {
+    document.getElementById("paymentModal").classList.remove("active");
+  }
+  
+  function copyUPIID() {
+    const textToCopy = `${upiId}`;
+    
+    // Try modern clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showCopiedModal();
+      }).catch(() => {
+        fallbackCopy(textToCopy);
+      });
+    } else {
+      fallbackCopy(textToCopy);
+    }
+  }
+  
+  function fallbackCopy(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      showCopiedModal();
+    } catch (err) {
+      document.getElementById("errorMessage").textContent = 
+        "Unable to copy. Please note down the UPI ID: " + upiId;
+      document.getElementById("errorModal").classList.add("active");
+    }
+    
+    document.body.removeChild(textArea);
+  }
+  
+  function showCopiedModal() {
+    closePaymentModal();
+    document.getElementById("copiedUpiId").textContent = upiId;
+    document.getElementById("copiedAmount").textContent = totalParam.toFixed(2);
+    document.getElementById("copiedModal").classList.add("active");
   }
   
   function showQRCode() {
@@ -1075,6 +1424,8 @@
     document.getElementById("successModal").classList.remove("active");
     document.getElementById("errorModal").classList.remove("active");
     document.getElementById("downloadModal").classList.remove("active");
+    document.getElementById("paymentModal").classList.remove("active");
+    document.getElementById("copiedModal").classList.remove("active");
   }
   
   // Close modal on background click
