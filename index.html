@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Smart Trolley Payment</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -11,269 +12,402 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  :root {
+    --primary: #00D084;
+    --primary-dark: #00B872;
+    --secondary: #FF6B6B;
+    --background: #0A0E27;
+    --surface: #1A1F3A;
+    --surface-light: #252B4A;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A0A8C5;
+    --text-muted: #6B7294;
+    --border: #2D3556;
+    --success: #00D084;
+    --error: #FF6B6B;
+    --warning: #FFB547;
   }
   
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
     min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 208, 132, 0.15), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
   
   .container {
     width: 100%;
-    max-width: 480px;
-    animation: slideUp 0.5s ease-out;
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 20px;
   }
   
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 0;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 20px 20px 60px;
+    position: relative;
     overflow: hidden;
   }
   
-  .header {
-    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-    color: white;
-    padding: 25px 20px;
-    text-align: center;
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 30c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10zm-20 0c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.5;
   }
   
-  .header h1 {
-    font-size: 28px;
-    margin-bottom: 5px;
+  .header-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .logo {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 8px;
   }
   
-  .header .subtitle {
-    font-size: 14px;
-    opacity: 0.9;
-    margin-top: 5px;
+  .logo-icon {
+    font-size: 32px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
   }
   
-  .shop-info {
-    background: #f8f9fa;
-    padding: 15px 20px;
-    border-bottom: 2px dashed #ddd;
+  .logo h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
   }
   
-  .shop-info p {
+  .subtitle {
     font-size: 13px;
-    color: #666;
-    margin: 3px 0;
+    opacity: 0.9;
+    font-weight: 500;
+    letter-spacing: 0.3px;
   }
   
-  .shop-info .date-time {
+  /* Card Container */
+  .card-container {
+    padding: 0 16px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .card {
+    background: var(--surface);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+  }
+  
+  /* Shop Info */
+  .shop-info {
+    background: var(--surface-light);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .info-label {
+    font-size: 11px;
     font-weight: 600;
-    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
   }
   
+  .info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'DM Mono', monospace;
+  }
+  
+  /* Content */
   .content {
-    padding: 20px;
+    padding: 24px 20px;
   }
   
-  .items-header {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #2e7d32;
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  .section-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+  
+  /* Items Table */
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
     margin-bottom: 20px;
   }
   
-  thead {
-    background: #f8f9fa;
+  .item-row {
+    background: var(--surface-light);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
   }
   
-  th {
-    padding: 12px 8px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  th:last-child, td:last-child {
-    text-align: right;
-  }
-  
-  tbody tr {
-    border-bottom: 1px solid #eee;
-    transition: background 0.2s;
-  }
-  
-  tbody tr:hover {
-    background: #f8f9fa;
-  }
-  
-  tbody tr:last-child {
-    border-bottom: none;
-  }
-  
-  td {
-    padding: 14px 8px;
-    font-size: 15px;
-    color: #333;
+  .item-row:active {
+    background: var(--surface);
   }
   
   .item-name {
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
   }
   
   .item-price {
-    font-weight: 600;
-    color: #2e7d32;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'DM Mono', monospace;
   }
   
-  .summary {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 12px;
+  .item-count {
+    text-align: center;
+    padding: 12px;
+    background: var(--surface-light);
+    border-radius: 10px;
     margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  
+  /* Summary */
+  .summary {
+    background: linear-gradient(135deg, var(--surface-light) 0%, rgba(26, 31, 58, 0.5) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .summary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), transparent);
   }
   
   .summary-row {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  .summary-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .summary-value {
     font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'DM Mono', monospace;
   }
   
-  .summary-row.subtotal {
-    color: #666;
-  }
-  
-  .summary-row.discount {
-    color: #d32f2f;
+  .summary-row.discount .summary-value {
+    color: var(--secondary);
   }
   
   .summary-row.total {
-    border-top: 2px solid #ddd;
-    margin-top: 10px;
-    padding-top: 15px;
-    font-size: 24px;
+    border-top: 2px dashed var(--border);
+    margin-top: 12px;
+    padding-top: 16px;
+  }
+  
+  .summary-row.total .summary-label {
+    font-size: 16px;
     font-weight: 700;
-    color: #2e7d32;
+    color: var(--text-primary);
   }
   
-  .item-count {
-    text-align: center;
-    color: #666;
-    font-size: 13px;
-    margin-bottom: 15px;
+  .summary-row.total .summary-value {
+    font-size: 28px;
+    color: var(--primary);
   }
   
-  .payment-buttons {
+  /* Buttons */
+  .button-group {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
   
-  button {
+  .btn {
     width: 100%;
-    padding: 16px;
-    font-size: 17px;
-    font-weight: 600;
+    padding: 18px 24px;
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .btn:active::before {
+    width: 300px;
+    height: 300px;
   }
   
   .btn-primary {
-    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.5);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #000;
+    box-shadow: 0 8px 24px rgba(0, 208, 132, 0.3);
   }
   
   .btn-primary:active {
-    transform: translateY(0);
+    transform: translateY(2px);
+    box-shadow: 0 4px 12px rgba(0, 208, 132, 0.2);
   }
   
   .btn-secondary {
-    background: white;
-    color: #2e7d32;
-    border: 2px solid #2e7d32;
+    background: var(--surface-light);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
   }
   
-  .btn-secondary:hover {
-    background: #f1f8f4;
+  .btn-secondary:active {
+    background: var(--surface);
+    border-color: var(--primary);
   }
   
+  .btn-icon {
+    font-size: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+  
+  /* Empty State */
   .empty-state {
     text-align: center;
-    padding: 40px 20px;
-    color: #999;
+    padding: 60px 20px;
   }
   
-  .empty-state .icon {
-    font-size: 64px;
-    margin-bottom: 15px;
+  .empty-icon {
+    font-size: 80px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+    filter: grayscale(1);
   }
   
-  .empty-state p {
+  .empty-text {
     font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 500;
   }
   
+  /* Footer */
   .footer {
     text-align: center;
-    padding: 20px;
-    color: #999;
-    font-size: 12px;
-    background: #f8f9fa;
+    padding: 24px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
   }
   
-  /* Modal Styles */
+  /* Modal */
   .modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(10px);
     z-index: 1000;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     animation: fadeIn 0.3s;
-    overflow-y: auto;
-    padding: 20px;
+    padding: 0;
   }
   
   .modal.active {
@@ -281,324 +415,429 @@
   }
   
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .modal-content {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: scaleIn 0.3s;
-  }
-  
-  @keyframes scaleIn {
-    from {
-      transform: scale(0.8);
+    from { 
       opacity: 0;
     }
-    to {
-      transform: scale(1);
+    to { 
       opacity: 1;
     }
   }
   
-  .modal-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
+  .modal-content {
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border);
+    border-bottom: none;
   }
   
-  .modal h2 {
-    margin-bottom: 15px;
-    color: #333;
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
   
-  .modal p {
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.5;
+  .modal-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
   }
   
-  .modal-buttons {
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  
+  .modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    text-align: center;
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 10px;
   }
   
-  .modal-buttons button {
-    flex: 1;
+  .modal-body {
+    padding: 24px 20px;
   }
   
-  /* QR Code Modal Styles */
-  .qr-modal-content {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 450px;
-    width: 90%;
+  .modal-icon {
+    font-size: 64px;
     text-align: center;
-    animation: scaleIn 0.3s;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 12px rgba(0, 208, 132, 0.3));
+  }
+  
+  .modal-message {
+    text-align: center;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  
+  /* QR Modal */
+  .qr-info {
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.1), rgba(0, 208, 132, 0.05));
+    border: 1px solid rgba(0, 208, 132, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .qr-info-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  
+  .qr-info-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'DM Mono', monospace;
   }
   
   .qr-container {
     background: white;
-    padding: 20px;
-    border-radius: 15px;
-    margin: 20px 0;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 24px;
+    border-radius: 20px;
+    margin: 24px 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
   
   #qrcode {
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
   }
   
   #qrcode canvas,
   #qrcode img {
-    border-radius: 10px;
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
   }
   
   .qr-instructions {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
+    background: var(--surface-light);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .qr-instructions-title {
     font-size: 14px;
-    color: #666;
-    line-height: 1.6;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-primary);
   }
   
-  .qr-instructions ol {
-    text-align: left;
-    padding-left: 20px;
-    margin: 10px 0;
+  .qr-steps {
+    list-style: none;
+    counter-reset: step;
   }
   
-  .qr-instructions li {
-    margin: 8px 0;
-  }
-  
-  .upi-info {
-    background: #e8f5e9;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-size: 13px;
-    color: #2e7d32;
-    font-weight: 600;
-  }
-  
-  .qr-buttons {
+  .qr-step {
+    counter-increment: step;
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
   }
   
-  .qr-buttons button {
-    flex: 1;
+  .qr-step:last-child {
+    margin-bottom: 0;
   }
   
-  .btn-download {
-    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+  .qr-step::before {
+    content: counter(step);
+    background: var(--primary);
+    color: #000;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
   }
   
-  .btn-download:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);
+  .qr-step-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-top: 2px;
   }
   
-  .btn-tertiary {
-    background: white;
-    color: #666;
-    border: 2px solid #ddd;
+  /* Button Grid */
+  .button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
   
-  .btn-tertiary:hover {
-    background: #f8f9fa;
-    border-color: #999;
+  .button-grid .btn {
+    padding: 16px;
+    font-size: 14px;
+  }
+  
+  /* Animations */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Item Animation */
+  .item-row {
+    animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   
   /* Print Styles */
   @media print {
     body {
       background: white;
-      padding: 0;
     }
     
-    .container {
-      max-width: 100%;
-      box-shadow: none;
+    body::before {
+      display: none;
     }
     
-    .payment-buttons,
-    .btn-secondary {
-      display: none !important;
+    .header {
+      background: #00D084;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
     }
     
     .card {
       box-shadow: none;
+      border: 1px solid #ddd;
+    }
+    
+    .button-group {
+      display: none !important;
+    }
+    
+    .modal {
+      display: none !important;
     }
   }
   
-  /* Responsive */
-  @media (max-width: 480px) {
-    body {
-      padding: 10px;
+  /* Safe Area for Notch Devices */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .header {
+      padding-top: calc(20px + env(safe-area-inset-top));
     }
     
-    .header h1 {
-      font-size: 24px;
-    }
-    
-    .content {
-      padding: 15px;
-    }
-    
-    th, td {
-      padding: 10px 6px;
-      font-size: 14px;
-    }
-    
-    .summary-row.total {
-      font-size: 20px;
-    }
-    
-    .qr-modal-content {
-      padding: 20px;
+    .modal-content {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
     }
   }
   
-  /* Loading Animation */
-  .loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255,255,255,.3);
-    border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 1s ease-in-out infinite;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  /* Landscape Mode */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .modal-content {
+      border-radius: 0;
+      max-height: 100vh;
+    }
   }
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="card" id="receiptCard">
-    <div class="header">
-      <h1>🛒 Smart Trolley</h1>
-      <div class="subtitle">Automated Shopping Cart System</div>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon">🛒</span>
+        <h1>Smart Trolley</h1>
+      </div>
+      <div class="subtitle">Instant Checkout System</div>
     </div>
-    
-    <div class="shop-info">
-      <p><strong>Smart Retail Store</strong></p>
-      <p class="date-time" id="dateTime"></p>
-      <p>Bill No: #<span id="billNo"></span></p>
-    </div>
-    
-    <div class="content">
-      <div id="emptyState" class="empty-state" style="display:none;">
-        <div class="icon">🛒</div>
-        <p>Your trolley is empty</p>
+  </div>
+  
+  <!-- Card Container -->
+  <div class="card-container">
+    <div class="card" id="receiptCard">
+      <!-- Shop Info -->
+      <div class="shop-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Bill No.</div>
+            <div class="info-value">#<span id="billNo"></span></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Date & Time</div>
+            <div class="info-value" id="dateTime"></div>
+          </div>
+        </div>
       </div>
       
-      <div id="itemsSection">
-        <div class="items-header">
-          Items in Your Cart
+      <!-- Content -->
+      <div class="content">
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="empty-icon">🛒</div>
+          <div class="empty-text">Your cart is empty</div>
         </div>
         
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody id="billBody"></tbody>
-        </table>
-        
-        <div class="item-count" id="itemCount"></div>
-        
-        <div class="summary">
-          <div class="summary-row subtotal">
-            <span>Subtotal</span>
-            <span id="subtotal">₹0</span>
+        <!-- Items Section -->
+        <div id="itemsSection">
+          <div class="section-title">Cart Items</div>
+          
+          <div class="items-list" id="itemsList"></div>
+          
+          <div class="item-count" id="itemCount"></div>
+          
+          <!-- Summary -->
+          <div class="summary">
+            <div class="summary-row">
+              <span class="summary-label">Subtotal</span>
+              <span class="summary-value" id="subtotal">₹0</span>
+            </div>
+            <div class="summary-row discount" id="discountRow" style="display:none;">
+              <span class="summary-label">Discount</span>
+              <span class="summary-value" id="discount">-₹0</span>
+            </div>
+            <div class="summary-row total">
+              <span class="summary-label">Total</span>
+              <span class="summary-value" id="totalAmount">₹0</span>
+            </div>
           </div>
-          <div class="summary-row discount" id="discountRow" style="display:none;">
-            <span>Discount</span>
-            <span id="discount">-₹0</span>
+          
+          <!-- Buttons -->
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="payNow()">
+              <span class="btn-icon">💳</span>
+              <span>Pay with UPI</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showQRCode()">
+              <span class="btn-icon">📱</span>
+              <span>Show QR Code</span>
+            </button>
+            <div class="button-grid">
+              <button class="btn btn-secondary" onclick="downloadReceipt()">
+                <span class="btn-icon">⬇️</span>
+                <span>Download</span>
+              </button>
+              <button class="btn btn-secondary" onclick="printReceipt()">
+                <span class="btn-icon">🖨️</span>
+                <span>Print</span>
+              </button>
+            </div>
           </div>
-          <div class="summary-row total">
-            <span>Total Amount</span>
-            <span id="totalAmount">₹0</span>
-          </div>
-        </div>
-        
-        <div class="payment-buttons">
-          <button class="btn-primary" onclick="payNow()">
-            <span>💳</span>
-            <span>Pay using UPI</span>
-          </button>
-          <button class="btn-secondary" onclick="showQRCode()">
-            <span>📱</span>
-            <span>Show QR Code</span>
-          </button>
-          <button class="btn-secondary" onclick="downloadReceipt()">
-            <span>⬇️</span>
-            <span>Download Receipt</span>
-          </button>
-          <button class="btn-secondary" onclick="printReceipt()">
-            <span>🖨️</span>
-            <span>Print Receipt</span>
-          </button>
         </div>
       </div>
     </div>
-    
-    <div class="footer">
-      Thank you for shopping with us! 💚
-    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    Thank you for shopping with us! 💚
   </div>
 </div>
 
 <!-- QR Code Modal -->
 <div id="qrModal" class="modal">
-  <div class="qr-modal-content">
-    <div class="modal-icon">📱</div>
-    <h2>Scan QR to Pay</h2>
-    
-    <div class="upi-info">
-      UPI ID: <span id="upiDisplay"></span>
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">
+        <span>📱</span>
+        <span>Scan to Pay</span>
+      </div>
     </div>
-    
-    <div class="qr-container">
-      <div id="qrcode"></div>
-    </div>
-    
-    <div class="qr-instructions">
-      <strong>How to pay:</strong>
-      <ol>
-        <li>Open any UPI app (Google Pay, PhonePe, Paytm, etc.)</li>
-        <li>Scan this QR code</li>
-        <li>Verify the amount: ₹<span id="qrAmount"></span></li>
-        <li>Complete the payment</li>
-      </ol>
-    </div>
-    
-    <div class="qr-buttons">
-      <button class="btn-download" onclick="downloadQRCode()">
-        <span>⬇️</span>
-        <span>Download QR</span>
-      </button>
-      <button class="btn-tertiary" onclick="closeQRModal()">
-        Close
-      </button>
+    <div class="modal-body">
+      <div class="qr-info">
+        <div class="qr-info-label">UPI ID</div>
+        <div class="qr-info-value" id="upiDisplay"></div>
+      </div>
+      
+      <div class="qr-info">
+        <div class="qr-info-label">Amount</div>
+        <div class="qr-info-value">₹<span id="qrAmount"></span></div>
+      </div>
+      
+      <div class="qr-container">
+        <div id="qrcode"></div>
+      </div>
+      
+      <div class="qr-instructions">
+        <div class="qr-instructions-title">How to pay:</div>
+        <ul class="qr-steps">
+          <li class="qr-step">
+            <span class="qr-step-text">Open any UPI app (GPay, PhonePe, Paytm)</span>
+          </li>
+          <li class="qr-step">
+            <span class="qr-step-text">Tap on "Scan QR" option</span>
+          </li>
+          <li class="qr-step">
+            <span class="qr-step-text">Scan this code with your camera</span>
+          </li>
+          <li class="qr-step">
+            <span class="qr-step-text">Verify amount and complete payment</span>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="downloadQRCode()">
+          <span class="btn-icon">⬇️</span>
+          <span>Download QR Code</span>
+        </button>
+        <button class="btn btn-secondary" onclick="closeQRModal()">
+          <span>Close</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -606,11 +845,14 @@
 <!-- Success Modal -->
 <div id="successModal" class="modal">
   <div class="modal-content">
-    <div class="modal-icon">✅</div>
-    <h2>Payment Initiated</h2>
-    <p>Opening UPI payment gateway...</p>
-    <div class="modal-buttons">
-      <button class="btn-primary" onclick="closeModal()">Close</button>
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Payment Initiated</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">✅</div>
+      <div class="modal-message">Opening your UPI app...</div>
+      <button class="btn btn-primary" onclick="closeModal()">Close</button>
     </div>
   </div>
 </div>
@@ -618,11 +860,14 @@
 <!-- Error Modal -->
 <div id="errorModal" class="modal">
   <div class="modal-content">
-    <div class="modal-icon">❌</div>
-    <h2>Payment Setup Required</h2>
-    <p id="errorMessage">UPI ID is required for payment processing.</p>
-    <div class="modal-buttons">
-      <button class="btn-primary" onclick="closeModal()">OK</button>
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Setup Required</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">❌</div>
+      <div class="modal-message" id="errorMessage">UPI ID is required for payment.</div>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
     </div>
   </div>
 </div>
@@ -630,11 +875,14 @@
 <!-- Download Success Modal -->
 <div id="downloadModal" class="modal">
   <div class="modal-content">
-    <div class="modal-icon">✅</div>
-    <h2>Download Complete</h2>
-    <p>Your receipt has been downloaded successfully!</p>
-    <div class="modal-buttons">
-      <button class="btn-primary" onclick="closeModal()">OK</button>
+    <div class="modal-header">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Download Complete</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">✅</div>
+      <div class="modal-message">Your file has been downloaded successfully!</div>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
     </div>
   </div>
 </div>
@@ -646,7 +894,7 @@
   const totalParam = parseFloat(params.get("total")) || 0;
   const upiId = params.get("upi") || "merchant@upi";
   
-  // Initialize bill number and date
+  // Initialize
   document.getElementById("billNo").textContent = generateBillNumber();
   document.getElementById("dateTime").textContent = formatDateTime();
   
@@ -657,7 +905,7 @@
   
   if (itemsParam) {
     const itemList = itemsParam.split(",");
-    const tbody = document.getElementById("billBody");
+    const itemsContainer = document.getElementById("itemsList");
     
     itemList.forEach((item, index) => {
       let name = item;
@@ -677,13 +925,14 @@
       items.push({ name, price });
       subtotal += price;
       
-      const row = document.createElement("tr");
-      row.style.animation = `slideUp 0.3s ease-out ${index * 0.05}s backwards`;
+      const row = document.createElement("div");
+      row.className = "item-row";
+      row.style.animationDelay = `${index * 0.05}s`;
       row.innerHTML = `
-        <td class="item-name">${name}</td>
-        <td class="item-price">₹${price.toFixed(2)}</td>
+        <div class="item-name">${name}</div>
+        <div class="item-price">₹${price.toFixed(2)}</div>
       `;
-      tbody.appendChild(row);
+      itemsContainer.appendChild(row);
     });
     
     // Update UI
@@ -692,7 +941,7 @@
     document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById("totalAmount").textContent = `₹${totalParam.toFixed(2)}`;
     
-    // Calculate and show discount if applicable
+    // Calculate discount
     const discount = subtotal - totalParam;
     if (discount > 0) {
       document.getElementById("discountRow").style.display = "flex";
@@ -715,14 +964,9 @@
   
   function formatDateTime() {
     const now = new Date();
-    const options = { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return now.toLocaleDateString('en-US', options);
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const date = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `${date} ${time}`;
   }
   
   function payNow() {
@@ -742,10 +986,8 @@
     
     const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
     
-    // Show success modal
     document.getElementById("successModal").classList.add("active");
     
-    // Redirect to UPI after a short delay
     setTimeout(() => {
       window.location.href = upiURL;
     }, 1500);
@@ -766,17 +1008,13 @@
       return;
     }
     
-    // Clear previous QR code
     document.getElementById("qrcode").innerHTML = "";
     
-    // Generate UPI URL
     const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
     
-    // Update modal info
     document.getElementById("upiDisplay").textContent = upiId;
     document.getElementById("qrAmount").textContent = totalParam.toFixed(2);
     
-    // Generate QR code
     qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
       text: upiURL,
       width: 256,
@@ -786,7 +1024,6 @@
       correctLevel: QRCode.CorrectLevel.H
     });
     
-    // Show modal
     document.getElementById("qrModal").classList.add("active");
   }
   
@@ -802,7 +1039,6 @@
       link.href = canvas.toDataURL();
       link.click();
       
-      // Show success message
       setTimeout(() => {
         closeQRModal();
         document.getElementById("downloadModal").classList.add("active");
@@ -812,26 +1048,21 @@
   
   function downloadReceipt() {
     const receiptCard = document.getElementById("receiptCard");
-    
-    // Temporarily hide buttons for screenshot
-    const buttons = receiptCard.querySelectorAll('.payment-buttons');
+    const buttons = receiptCard.querySelectorAll('.button-group');
     buttons.forEach(btn => btn.style.display = 'none');
     
     html2canvas(receiptCard, {
       scale: 2,
-      backgroundColor: '#ffffff',
+      backgroundColor: '#1A1F3A',
       logging: false
     }).then(canvas => {
-      // Restore buttons
       buttons.forEach(btn => btn.style.display = '');
       
-      // Download image
       const link = document.createElement('a');
       link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
       link.href = canvas.toDataURL();
       link.click();
       
-      // Show success message
       document.getElementById("downloadModal").classList.add("active");
     });
   }
@@ -855,6 +1086,19 @@
       }
     });
   });
+  
+  // Prevent pull-to-refresh
+  let lastY = 0;
+  document.addEventListener('touchstart', (e) => {
+    lastY = e.touches[0].clientY;
+  });
+  
+  document.addEventListener('touchmove', (e) => {
+    const currentY = e.touches[0].clientY;
+    if (currentY > lastY && window.scrollY === 0) {
+      e.preventDefault();
+    }
+  }, { passive: false });
 </script>
 </body>
 </html>
