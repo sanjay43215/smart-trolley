@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Smart Trolley Payment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * {
     margin: 0;
@@ -270,6 +272,8 @@
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s;
+    overflow-y: auto;
+    padding: 20px;
   }
   
   .modal.active {
@@ -327,6 +331,97 @@
     flex: 1;
   }
   
+  /* QR Code Modal Styles */
+  .qr-modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    animation: scaleIn 0.3s;
+  }
+  
+  .qr-container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  #qrcode {
+    margin: 0 auto;
+  }
+  
+  #qrcode canvas,
+  #qrcode img {
+    border-radius: 10px;
+  }
+  
+  .qr-instructions {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .qr-instructions ol {
+    text-align: left;
+    padding-left: 20px;
+    margin: 10px 0;
+  }
+  
+  .qr-instructions li {
+    margin: 8px 0;
+  }
+  
+  .upi-info {
+    background: #e8f5e9;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 13px;
+    color: #2e7d32;
+    font-weight: 600;
+  }
+  
+  .qr-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .qr-buttons button {
+    flex: 1;
+  }
+  
+  .btn-download {
+    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+  }
+  
+  .btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);
+  }
+  
+  .btn-tertiary {
+    background: white;
+    color: #666;
+    border: 2px solid #ddd;
+  }
+  
+  .btn-tertiary:hover {
+    background: #f8f9fa;
+    border-color: #999;
+  }
+  
   /* Print Styles */
   @media print {
     body {
@@ -371,6 +466,10 @@
     .summary-row.total {
       font-size: 20px;
     }
+    
+    .qr-modal-content {
+      padding: 20px;
+    }
   }
   
   /* Loading Animation */
@@ -391,7 +490,7 @@
 </head>
 <body>
 <div class="container">
-  <div class="card">
+  <div class="card" id="receiptCard">
     <div class="header">
       <h1>🛒 Smart Trolley</h1>
       <div class="subtitle">Automated Shopping Cart System</div>
@@ -446,6 +545,14 @@
             <span>💳</span>
             <span>Pay using UPI</span>
           </button>
+          <button class="btn-secondary" onclick="showQRCode()">
+            <span>📱</span>
+            <span>Show QR Code</span>
+          </button>
+          <button class="btn-secondary" onclick="downloadReceipt()">
+            <span>⬇️</span>
+            <span>Download Receipt</span>
+          </button>
           <button class="btn-secondary" onclick="printReceipt()">
             <span>🖨️</span>
             <span>Print Receipt</span>
@@ -456,6 +563,42 @@
     
     <div class="footer">
       Thank you for shopping with us! 💚
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+<div id="qrModal" class="modal">
+  <div class="qr-modal-content">
+    <div class="modal-icon">📱</div>
+    <h2>Scan QR to Pay</h2>
+    
+    <div class="upi-info">
+      UPI ID: <span id="upiDisplay"></span>
+    </div>
+    
+    <div class="qr-container">
+      <div id="qrcode"></div>
+    </div>
+    
+    <div class="qr-instructions">
+      <strong>How to pay:</strong>
+      <ol>
+        <li>Open any UPI app (Google Pay, PhonePe, Paytm, etc.)</li>
+        <li>Scan this QR code</li>
+        <li>Verify the amount: ₹<span id="qrAmount"></span></li>
+        <li>Complete the payment</li>
+      </ol>
+    </div>
+    
+    <div class="qr-buttons">
+      <button class="btn-download" onclick="downloadQRCode()">
+        <span>⬇️</span>
+        <span>Download QR</span>
+      </button>
+      <button class="btn-tertiary" onclick="closeQRModal()">
+        Close
+      </button>
     </div>
   </div>
 </div>
@@ -484,12 +627,24 @@
   </div>
 </div>
 
+<!-- Download Success Modal -->
+<div id="downloadModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon">✅</div>
+    <h2>Download Complete</h2>
+    <p>Your receipt has been downloaded successfully!</p>
+    <div class="modal-buttons">
+      <button class="btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // Parse URL parameters
   const params = new URLSearchParams(window.location.search);
   const itemsParam = params.get("items");
   const totalParam = parseFloat(params.get("total")) || 0;
-  const upiId = params.get("upi");
+  const upiId = params.get("upi") || "merchant@upi";
   
   // Initialize bill number and date
   document.getElementById("billNo").textContent = generateBillNumber();
@@ -498,6 +653,7 @@
   // Process items
   let items = [];
   let subtotal = 0;
+  let qrCodeInstance = null;
   
   if (itemsParam) {
     const itemList = itemsParam.split(",");
@@ -595,6 +751,91 @@
     }, 1500);
   }
   
+  function showQRCode() {
+    if (!upiId) {
+      document.getElementById("errorMessage").textContent = 
+        "UPI ID is not configured. Please add ?upi=yourname@upi to the URL.";
+      document.getElementById("errorModal").classList.add("active");
+      return;
+    }
+    
+    if (totalParam <= 0) {
+      document.getElementById("errorMessage").textContent = 
+        "Cart is empty or invalid total amount.";
+      document.getElementById("errorModal").classList.add("active");
+      return;
+    }
+    
+    // Clear previous QR code
+    document.getElementById("qrcode").innerHTML = "";
+    
+    // Generate UPI URL
+    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    
+    // Update modal info
+    document.getElementById("upiDisplay").textContent = upiId;
+    document.getElementById("qrAmount").textContent = totalParam.toFixed(2);
+    
+    // Generate QR code
+    qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
+      text: upiURL,
+      width: 256,
+      height: 256,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    
+    // Show modal
+    document.getElementById("qrModal").classList.add("active");
+  }
+  
+  function closeQRModal() {
+    document.getElementById("qrModal").classList.remove("active");
+  }
+  
+  function downloadQRCode() {
+    const canvas = document.querySelector("#qrcode canvas");
+    if (canvas) {
+      const link = document.createElement('a');
+      link.download = `smart-trolley-qr-${document.getElementById("billNo").textContent}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      
+      // Show success message
+      setTimeout(() => {
+        closeQRModal();
+        document.getElementById("downloadModal").classList.add("active");
+      }, 500);
+    }
+  }
+  
+  function downloadReceipt() {
+    const receiptCard = document.getElementById("receiptCard");
+    
+    // Temporarily hide buttons for screenshot
+    const buttons = receiptCard.querySelectorAll('.payment-buttons');
+    buttons.forEach(btn => btn.style.display = 'none');
+    
+    html2canvas(receiptCard, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      logging: false
+    }).then(canvas => {
+      // Restore buttons
+      buttons.forEach(btn => btn.style.display = '');
+      
+      // Download image
+      const link = document.createElement('a');
+      link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      
+      // Show success message
+      document.getElementById("downloadModal").classList.add("active");
+    });
+  }
+  
   function printReceipt() {
     window.print();
   }
@@ -602,6 +843,7 @@
   function closeModal() {
     document.getElementById("successModal").classList.remove("active");
     document.getElementById("errorModal").classList.remove("active");
+    document.getElementById("downloadModal").classList.remove("active");
   }
   
   // Close modal on background click
@@ -609,6 +851,7 @@
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         closeModal();
+        closeQRModal();
       }
     });
   });
