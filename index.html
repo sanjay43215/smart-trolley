@@ -140,6 +140,7 @@
   tbody tr {
     border-bottom: 1px solid #eee;
     transition: background 0.2s;
+    background: #fff;
   }
   
   tbody tr:hover {
@@ -157,9 +158,29 @@
     word-wrap: break-word;
   }
   
+  .item-name {
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  .item-price {
+    font-weight: 600;
+    color: #2e7d32;
+  }
+  
   .card.receipt-mode td {
     padding: 10px 8px;
     font-size: 14px;
+  }
+  
+  .card.receipt-mode .item-name {
+    color: #000;
+    font-weight: 600;
+  }
+  
+  .card.receipt-mode .item-price {
+    color: #2e7d32;
+    font-weight: 700;
   }
   
   .card.receipt-mode .summary {
@@ -910,7 +931,9 @@
       height: totalHeight,
       windowHeight: totalHeight,
       scrollY: -window.scrollY,
-      scrollX: -window.scrollX
+      scrollX: -window.scrollX,
+      allowTaint: true,
+      foreignObjectRendering: false
     }).then(canvas => {
       // Restore buttons and original styling
       buttons.forEach(btn => btn.style.display = '');
