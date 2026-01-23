@@ -17,7 +17,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,35 +51,37 @@
   .header {
     background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
     color: white;
-    padding: 25px 20px;
+    padding: 20px 15px;
     text-align: center;
   }
   
   .header h1 {
-    font-size: 28px;
+    font-size: 24px;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
   }
   
   .header .subtitle {
-    font-size: 14px;
+    font-size: 13px;
     opacity: 0.9;
     margin-top: 5px;
   }
   
   .shop-info {
     background: #f8f9fa;
-    padding: 15px 20px;
+    padding: 12px 15px;
     border-bottom: 2px dashed #ddd;
   }
   
   .shop-info p {
-    font-size: 13px;
+    font-size: 12px;
     color: #666;
     margin: 3px 0;
+    word-wrap: break-word;
   }
   
   .shop-info .date-time {
@@ -88,22 +90,30 @@
   }
   
   .content {
-    padding: 20px;
+    padding: 15px;
   }
   
   .items-header {
     font-size: 16px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
     border-bottom: 2px solid #2e7d32;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -15px;
+    padding: 0 15px;
   }
   
   table {
     width: 100%;
+    min-width: 280px;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   
   thead {
@@ -111,9 +121,9 @@
   }
   
   th {
-    padding: 12px 8px;
+    padding: 10px 8px;
     text-align: left;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: #555;
     text-transform: uppercase;
@@ -138,32 +148,36 @@
   }
   
   td {
-    padding: 14px 8px;
-    font-size: 15px;
+    padding: 12px 8px;
+    font-size: 14px;
     color: #333;
+    word-wrap: break-word;
   }
   
   .item-name {
     font-weight: 500;
+    max-width: 200px;
   }
   
   .item-price {
     font-weight: 600;
     color: #2e7d32;
+    white-space: nowrap;
   }
   
   .summary {
     background: #f8f9fa;
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   
   .summary-row {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    font-size: 15px;
+    padding: 6px 0;
+    font-size: 14px;
+    gap: 10px;
   }
   
   .summary-row.subtotal {
@@ -176,11 +190,15 @@
   
   .summary-row.total {
     border-top: 2px solid #ddd;
-    margin-top: 10px;
-    padding-top: 15px;
-    font-size: 24px;
+    margin-top: 8px;
+    padding-top: 12px;
+    font-size: 20px;
     font-weight: 700;
     color: #2e7d32;
+  }
+  
+  .summary-row span:last-child {
+    white-space: nowrap;
   }
   
   .item-count {
@@ -191,15 +209,15 @@
   }
   
   .payment-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
   
   button {
     width: 100%;
-    padding: 16px;
-    font-size: 17px;
+    padding: 14px 10px;
+    font-size: 14px;
     font-weight: 600;
     border: none;
     border-radius: 12px;
@@ -208,7 +226,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  
+  button span {
+    display: inline-block;
   }
   
   .btn-primary {
@@ -253,7 +276,7 @@
   
   .footer {
     text-align: center;
-    padding: 20px;
+    padding: 15px;
     color: #999;
     font-size: 12px;
     background: #f8f9fa;
@@ -273,7 +296,7 @@
     justify-content: center;
     animation: fadeIn 0.3s;
     overflow-y: auto;
-    padding: 20px;
+    padding: 15px;
   }
   
   .modal.active {
@@ -288,11 +311,13 @@
   .modal-content {
     background: white;
     border-radius: 20px;
-    padding: 30px;
+    padding: 25px 20px;
     max-width: 400px;
-    width: 90%;
+    width: 100%;
     text-align: center;
     animation: scaleIn 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   
   @keyframes scaleIn {
@@ -307,19 +332,21 @@
   }
   
   .modal-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
+    font-size: 56px;
+    margin-bottom: 15px;
   }
   
   .modal h2 {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: #333;
+    font-size: 20px;
   }
   
   .modal p {
     color: #666;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     line-height: 1.5;
+    font-size: 14px;
   }
   
   .modal-buttons {
@@ -335,37 +362,53 @@
   .qr-modal-content {
     background: white;
     border-radius: 20px;
-    padding: 30px;
-    max-width: 450px;
-    width: 90%;
+    padding: 25px 15px;
+    max-width: 420px;
+    width: 100%;
     text-align: center;
     animation: scaleIn 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   
   .qr-container {
-    background: white;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 20px;
     border-radius: 15px;
-    margin: 20px 0;
-    display: inline-block;
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .qr-wrapper {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: inline-block;
   }
   
   #qrcode {
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   #qrcode canvas,
   #qrcode img {
-    border-radius: 10px;
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
   }
   
   .qr-instructions {
     background: #f8f9fa;
-    padding: 15px;
+    padding: 12px;
     border-radius: 10px;
-    margin: 20px 0;
-    font-size: 14px;
+    margin: 15px 0;
+    font-size: 13px;
     color: #666;
     line-height: 1.6;
   }
@@ -373,31 +416,34 @@
   .qr-instructions ol {
     text-align: left;
     padding-left: 20px;
-    margin: 10px 0;
+    margin: 8px 0;
   }
   
   .qr-instructions li {
-    margin: 8px 0;
+    margin: 6px 0;
   }
   
   .upi-info {
     background: #e8f5e9;
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
-    margin: 15px 0;
+    margin: 12px 0;
     font-size: 13px;
     color: #2e7d32;
     font-weight: 600;
+    word-wrap: break-word;
   }
   
   .qr-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
   }
   
   .qr-buttons button {
     flex: 1;
+    min-width: 120px;
   }
   
   .btn-download {
@@ -450,25 +496,88 @@
       padding: 10px;
     }
     
+    .header {
+      padding: 18px 12px;
+    }
+    
     .header h1 {
-      font-size: 24px;
+      font-size: 20px;
+      gap: 6px;
+    }
+    
+    .header .subtitle {
+      font-size: 12px;
     }
     
     .content {
-      padding: 15px;
+      padding: 12px;
+    }
+    
+    .table-wrapper {
+      margin: 0 -12px;
+      padding: 0 12px;
     }
     
     th, td {
       padding: 10px 6px;
-      font-size: 14px;
+      font-size: 13px;
+    }
+    
+    .summary {
+      padding: 12px;
+    }
+    
+    .summary-row {
+      font-size: 13px;
     }
     
     .summary-row.total {
-      font-size: 20px;
+      font-size: 18px;
+    }
+    
+    button {
+      padding: 12px 8px;
+      font-size: 13px;
+      gap: 4px;
+    }
+    
+    .payment-buttons {
+      gap: 8px;
     }
     
     .qr-modal-content {
-      padding: 20px;
+      padding: 20px 12px;
+    }
+    
+    .modal-icon {
+      font-size: 48px;
+    }
+    
+    .modal h2 {
+      font-size: 18px;
+    }
+    
+    .qr-container {
+      padding: 15px;
+    }
+    
+    .qr-wrapper {
+      padding: 12px;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .header h1 {
+      font-size: 18px;
+    }
+    
+    button {
+      font-size: 12px;
+      padding: 10px 6px;
+    }
+    
+    .summary-row.total {
+      font-size: 16px;
     }
   }
   
@@ -513,15 +622,17 @@
           Items in Your Cart
         </div>
         
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody id="billBody"></tbody>
-        </table>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody id="billBody"></tbody>
+          </table>
+        </div>
         
         <div class="item-count" id="itemCount"></div>
         
@@ -543,19 +654,19 @@
         <div class="payment-buttons">
           <button class="btn-primary" onclick="payNow()">
             <span>💳</span>
-            <span>Pay using UPI</span>
+            <span>Pay UPI</span>
           </button>
           <button class="btn-secondary" onclick="showQRCode()">
             <span>📱</span>
-            <span>Show QR Code</span>
+            <span>QR Code</span>
           </button>
           <button class="btn-secondary" onclick="downloadReceipt()">
             <span>⬇️</span>
-            <span>Download Receipt</span>
+            <span>Receipt</span>
           </button>
           <button class="btn-secondary" onclick="printReceipt()">
             <span>🖨️</span>
-            <span>Print Receipt</span>
+            <span>Print</span>
           </button>
         </div>
       </div>
@@ -578,7 +689,9 @@
     </div>
     
     <div class="qr-container">
-      <div id="qrcode"></div>
+      <div class="qr-wrapper">
+        <div id="qrcode"></div>
+      </div>
     </div>
     
     <div class="qr-instructions">
@@ -632,7 +745,7 @@
   <div class="modal-content">
     <div class="modal-icon">✅</div>
     <h2>Download Complete</h2>
-    <p>Your receipt has been downloaded successfully!</p>
+    <p>Your file has been downloaded successfully!</p>
     <div class="modal-buttons">
       <button class="btn-primary" onclick="closeModal()">OK</button>
     </div>
@@ -663,15 +776,24 @@
       let name = item;
       let price = 0;
       
-      if (item.includes("-")) {
+      // Handle format like "blackdiary120" or "milk30"
+      // Extract text and number parts
+      const match = item.match(/^([a-zA-Z\s]+?)(\d+\.?\d*)$/);
+      
+      if (match) {
+        name = match[1].trim();
+        // Capitalize first letter of each word
+        name = name.split('').map((char, i) => {
+          if (i === 0 || name[i-1] === ' ') {
+            return char.toUpperCase();
+          }
+          return char;
+        }).join('');
+        price = parseFloat(match[2]) || 0;
+      } else if (item.includes("-")) {
+        // Also support explicit format "ItemName-Price"
         [name, price] = item.split("-");
         price = parseFloat(price) || 0;
-      } else {
-        const match = item.match(/^([A-Za-z\s]+)(\d+\.?\d*)$/);
-        if (match) {
-          name = match[1].trim();
-          price = parseFloat(match[2]) || 0;
-        }
       }
       
       items.push({ name, price });
@@ -740,7 +862,13 @@
       return;
     }
     
-    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    // Create item description for transaction note
+    const itemsDescription = items.map(item => `${item.name} ₹${item.price}`).join(', ');
+    const billNumber = document.getElementById("billNo").textContent;
+    const transactionNote = `Bill#${billNumber} - ${itemsDescription}`;
+    
+    // Generate UPI URL with items in transaction note
+    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
     
     // Show success modal
     document.getElementById("successModal").classList.add("active");
@@ -769,18 +897,24 @@
     // Clear previous QR code
     document.getElementById("qrcode").innerHTML = "";
     
-    // Generate UPI URL
-    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    // Create item description for transaction note
+    const itemsDescription = items.map(item => `${item.name} ₹${item.price}`).join(', ');
+    const billNumber = document.getElementById("billNo").textContent;
+    const transactionNote = `Bill#${billNumber} - ${itemsDescription}`;
+    
+    // Generate UPI URL with items in transaction note
+    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
     
     // Update modal info
     document.getElementById("upiDisplay").textContent = upiId;
     document.getElementById("qrAmount").textContent = totalParam.toFixed(2);
     
-    // Generate QR code
+    // Generate QR code with mobile-friendly size
+    const qrSize = window.innerWidth < 400 ? 220 : 256;
     qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
       text: upiURL,
-      width: 256,
-      height: 256,
+      width: qrSize,
+      height: qrSize,
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
@@ -795,19 +929,40 @@
   }
   
   function downloadQRCode() {
-    const canvas = document.querySelector("#qrcode canvas");
-    if (canvas) {
-      const link = document.createElement('a');
-      link.download = `smart-trolley-qr-${document.getElementById("billNo").textContent}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-      
-      // Show success message
-      setTimeout(() => {
-        closeQRModal();
-        document.getElementById("downloadModal").classList.add("active");
-      }, 500);
+    const qrCanvas = document.querySelector("#qrcode canvas");
+    if (!qrCanvas) {
+      alert("QR code not generated yet!");
+      return;
     }
+    
+    // Create a new canvas with white padding
+    const padding = 40;
+    const qrSize = qrCanvas.width;
+    const totalSize = qrSize + (padding * 2);
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = totalSize;
+    canvas.height = totalSize;
+    const ctx = canvas.getContext('2d');
+    
+    // Fill with white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, totalSize, totalSize);
+    
+    // Draw QR code in center with padding
+    ctx.drawImage(qrCanvas, padding, padding, qrSize, qrSize);
+    
+    // Download the image
+    const link = document.createElement('a');
+    link.download = `smart-trolley-qr-${document.getElementById("billNo").textContent}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    
+    // Show success message
+    setTimeout(() => {
+      closeQRModal();
+      document.getElementById("downloadModal").classList.add("active");
+    }, 500);
   }
   
   function downloadReceipt() {
@@ -820,7 +975,8 @@
     html2canvas(receiptCard, {
       scale: 2,
       backgroundColor: '#ffffff',
-      logging: false
+      logging: false,
+      useCORS: true
     }).then(canvas => {
       // Restore buttons
       buttons.forEach(btn => btn.style.display = '');
@@ -828,7 +984,7 @@
       // Download image
       const link = document.createElement('a');
       link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
-      link.href = canvas.toDataURL();
+      link.href = canvas.toDataURL('image/png');
       link.click();
       
       // Show success message
@@ -855,6 +1011,7 @@
       }
     });
   });
-</script>
-</body>
-</html>
+  
+  // Prevent body scroll when modal is open
+  const observer = new MutationObserver(() => {
+    const anyModalActive = document.querySelector('.modal.active');
