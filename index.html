@@ -5,7 +5,7 @@
 <title>Smart Trolley Payment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * {
     margin: 0;
@@ -46,6 +46,12 @@
     padding: 0;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     overflow: hidden;
+    min-height: auto;
+  }
+  
+  .card.receipt-mode {
+    min-height: 1000px;
+    max-width: 800px;
   }
   
   .header {
@@ -148,6 +154,24 @@
     padding: 14px 8px;
     font-size: 15px;
     color: #333;
+    word-wrap: break-word;
+  }
+  
+  .card.receipt-mode td {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+  
+  .card.receipt-mode .summary {
+    padding: 15px;
+  }
+  
+  .card.receipt-mode .summary-row {
+    font-size: 14px;
+  }
+  
+  .card.receipt-mode .summary-row.total {
+    font-size: 20px;
   }
   
   .item-name {
@@ -665,7 +689,7 @@
   <div class="modal-content">
     <div class="modal-icon">✅</div>
     <h2>Download Complete</h2>
-    <p>Your receipt PDF has been downloaded successfully!</p>
+    <p>Your receipt has been downloaded successfully!</p>
     <div class="modal-buttons">
       <button class="btn-primary" onclick="closeModal()">OK</button>
     </div>
@@ -862,176 +886,53 @@
   }
   
   function downloadReceipt() {
-    // Check if jsPDF is loaded
-    if (typeof window.jspdf === 'undefined') {
-      alert('PDF library is loading... Please try again in a moment.');
-      return;
-    }
+    const receiptCard = document.getElementById("receiptCard");
+    const container = document.querySelector(".container");
     
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    // Add receipt mode class for better sizing
+    receiptCard.classList.add('receipt-mode');
+    container.style.maxWidth = '800px';
     
-    const billNumber = document.getElementById("billNo").textContent;
-    const dateTime = document.getElementById("dateTime").textContent;
+    // Temporarily hide buttons for screenshot
+    const buttons = receiptCard.querySelectorAll('.payment-buttons');
+    buttons.forEach(btn => btn.style.display = 'none');
     
-    try {
-      // Set font
-      doc.setFont("helvetica");
+    // Calculate canvas height based on items (support up to 20 items)
+    const baseHeight = 600;
+    const itemHeight = 50;
+    const totalHeight = Math.max(baseHeight + (items.length * itemHeight), 800);
+    
+    html2canvas(receiptCard, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      logging: false,
+      useCORS: true,
+      height: totalHeight,
+      windowHeight: totalHeight,
+      scrollY: -window.scrollY,
+      scrollX: -window.scrollX
+    }).then(canvas => {
+      // Restore buttons and original styling
+      buttons.forEach(btn => btn.style.display = '');
+      receiptCard.classList.remove('receipt-mode');
+      container.style.maxWidth = '480px';
       
-      // Header - Green background
-      doc.setFillColor(46, 125, 50);
-      doc.rect(0, 0, 210, 40, 'F');
-      
-      // Title
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(24);
-      doc.text("Smart Trolley", 105, 18, { align: "center" });
-      
-      doc.setFontSize(11);
-      doc.text("Automated Shopping Cart System", 105, 28, { align: "center" });
-      
-      // Shop Info
-      doc.setFillColor(248, 249, 250);
-      doc.rect(0, 40, 210, 25, 'F');
-      
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text("Smart Retail Store", 15, 50);
-      
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text(dateTime, 15, 56);
-      doc.text("Bill No: #" + billNumber, 15, 61);
-      
-      // Items Header
-      let yPos = 75;
-      doc.setFontSize(13);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(0, 0, 0);
-      doc.text("Items in Your Cart", 15, yPos);
-      
-      // Draw line under header
-      doc.setDrawColor(46, 125, 50);
-      doc.setLineWidth(0.5);
-      doc.line(15, yPos + 2, 195, yPos + 2);
-      
-      yPos += 12;
-      
-      // Table header
-      doc.setFillColor(248, 249, 250);
-      doc.rect(15, yPos - 5, 180, 10, 'F');
-      
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(85, 85, 85);
-      doc.text("ITEM", 20, yPos);
-      doc.text("PRICE", 175, yPos, { align: "right" });
-      
-      yPos += 8;
-      
-      // Items
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(51, 51, 51);
-      doc.setFontSize(11);
-      
-      items.forEach((item, index) => {
-        // Add new page if needed
-        if (yPos > 250) {
-          doc.addPage();
-          yPos = 20;
-        }
-        
-        doc.text(item.name, 20, yPos);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(46, 125, 50);
-        doc.text("Rs." + item.price.toFixed(2), 175, yPos, { align: "right" });
-        
-        // Draw separator line
-        doc.setDrawColor(238, 238, 238);
-        doc.setLineWidth(0.2);
-        doc.line(15, yPos + 2, 195, yPos + 2);
-        
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(51, 51, 51);
-        yPos += 10;
-      });
-      
-      yPos += 5;
-      
-      // Item count
-      doc.setFontSize(9);
-      doc.setTextColor(102, 102, 102);
-      doc.text(items.length + " item" + (items.length !== 1 ? 's' : '') + " in cart", 105, yPos, { align: "center" });
-      
-      yPos += 10;
-      
-      // Summary box
-      doc.setFillColor(248, 249, 250);
-      const discount = subtotal - totalParam;
-      const summaryHeight = discount > 0 ? 40 : 30;
-      doc.roundedRect(15, yPos, 180, summaryHeight, 3, 3, 'F');
-      
-      yPos += 10;
-      
-      doc.setFontSize(11);
-      doc.setTextColor(102, 102, 102);
-      doc.text("Subtotal", 20, yPos);
-      doc.setFont("helvetica", "bold");
-      doc.text("Rs." + subtotal.toFixed(2), 175, yPos, { align: "right" });
-      
-      yPos += 8;
-      
-      // Discount if applicable
-      if (discount > 0) {
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(211, 47, 47);
-        doc.text("Discount", 20, yPos);
-        doc.setFont("helvetica", "bold");
-        doc.text("-Rs." + discount.toFixed(2), 175, yPos, { align: "right" });
-        yPos += 10;
-      }
-      
-      // Draw separator line
-      doc.setDrawColor(221, 221, 221);
-      doc.setLineWidth(0.5);
-      doc.line(20, yPos, 190, yPos);
-      
-      yPos += 10;
-      
-      // Total
-      doc.setFontSize(16);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(46, 125, 50);
-      doc.text("Total Amount", 20, yPos);
-      doc.text("Rs." + totalParam.toFixed(2), 175, yPos, { align: "right" });
-      
-      yPos += 15;
-      
-      // Payment info
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont("helvetica", "normal");
-      doc.text("Payment Method: UPI", 20, yPos);
-      doc.text("UPI ID: " + upiId, 20, yPos + 6);
-      
-      // Footer
-      yPos += 20;
-      doc.setFontSize(11);
-      doc.setTextColor(46, 125, 50);
-      doc.setFont("helvetica", "bold");
-      doc.text("Thank you for shopping with us!", 105, yPos, { align: "center" });
-      
-      // Save PDF
-      doc.save("smart-trolley-receipt-" + billNumber + ".pdf");
+      // Download image
+      const link = document.createElement('a');
+      link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
       
       // Show success message
       document.getElementById("downloadModal").classList.add("active");
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      alert('Error generating PDF: ' + error.message);
-    }
+    }).catch(error => {
+      // Restore on error
+      buttons.forEach(btn => btn.style.display = '');
+      receiptCard.classList.remove('receipt-mode');
+      container.style.maxWidth = '480px';
+      console.error('Screenshot error:', error);
+      alert('Error generating receipt. Please try again.');
+    });
   }
   
   function printReceipt() {
