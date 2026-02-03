@@ -924,35 +924,60 @@
     buttons.forEach(btn => btn.style.display = 'none');
     
     // Calculate dynamic height based on actual content
-    // Base height for header, shop info, summary, footer
-    const baseHeight = 400;
-    // Each item row height (approximate)
+    // Minimum height to ensure all content fits
+    const minHeight = 800;
+    
+    // Base components height
+    const headerHeight = 120;
+    const shopInfoHeight = 80;
+    const itemsHeaderHeight = 50;
+    const tableHeaderHeight = 45;
+    const summaryHeight = 180;
+    const footerHeight = 60;
+    const contentPadding = 40;
+    const itemCountHeight = 30;
+    
+    // Each item row height
     const itemHeight = 45;
-    // Calculate total height with padding
-    const calculatedHeight = baseHeight + (items.length * itemHeight) + 100;
+    
+    // Calculate total based on items
+    const itemsHeight = items.length * itemHeight;
+    
+    // Total calculated height
+    const calculatedHeight = headerHeight + shopInfoHeight + itemsHeaderHeight + 
+                            tableHeaderHeight + itemsHeight + itemCountHeight + 
+                            summaryHeight + footerHeight + contentPadding + 50;
+    
+    // Use the maximum of minimum height or calculated height
+    const finalHeight = Math.max(minHeight, calculatedHeight);
     
     // Use setTimeout to ensure DOM is fully rendered with new styles
     setTimeout(() => {
       html2canvas(receiptCard, {
-        scale: 2,
+        scale: 2.5,
         backgroundColor: '#ffffff',
         logging: false,
         useCORS: true,
         allowTaint: true,
         foreignObjectRendering: false,
         width: 800,
-        height: calculatedHeight,
+        height: finalHeight,
         windowWidth: 800,
-        windowHeight: calculatedHeight,
+        windowHeight: finalHeight,
         scrollY: 0,
         scrollX: 0,
         onclone: function(clonedDoc) {
           // Ensure the cloned document has proper dimensions
           const clonedCard = clonedDoc.getElementById('receiptCard');
+          const clonedContainer = clonedDoc.querySelector('.container');
           if (clonedCard) {
-            clonedCard.style.minHeight = calculatedHeight + 'px';
+            clonedCard.style.minHeight = finalHeight + 'px';
             clonedCard.style.height = 'auto';
             clonedCard.style.overflow = 'visible';
+            clonedCard.style.paddingBottom = '20px';
+          }
+          if (clonedContainer) {
+            clonedContainer.style.maxWidth = '800px';
           }
         }
       }).then(canvas => {
@@ -979,7 +1004,7 @@
         console.error('Screenshot error:', error);
         alert('Error generating receipt. Please try again.');
       });
-    }, 100);
+    }, 150);
   }
   
   function printReceipt() {
