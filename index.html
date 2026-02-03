@@ -49,11 +49,6 @@
     min-height: auto;
   }
   
-  .card.receipt-mode {
-    min-height: auto;
-    max-width: 800px;
-  }
-  
   .header {
     background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
     color: white;
@@ -161,42 +156,6 @@
   .item-name {
     font-weight: 500;
     color: #1a1a1a;
-  }
-  
-  .item-price {
-    font-weight: 600;
-    color: #2e7d32;
-  }
-  
-  .card.receipt-mode td {
-    padding: 10px 8px;
-    font-size: 14px;
-  }
-  
-  .card.receipt-mode .item-name {
-    color: #000;
-    font-weight: 600;
-  }
-  
-  .card.receipt-mode .item-price {
-    color: #2e7d32;
-    font-weight: 700;
-  }
-  
-  .card.receipt-mode .summary {
-    padding: 15px;
-  }
-  
-  .card.receipt-mode .summary-row {
-    font-size: 14px;
-  }
-  
-  .card.receipt-mode .summary-row.total {
-    font-size: 20px;
-  }
-  
-  .item-name {
-    font-weight: 500;
   }
   
   .item-price {
@@ -908,86 +867,38 @@
   
   function downloadReceipt() {
     const receiptCard = document.getElementById("receiptCard");
-    const container = document.querySelector(".container");
     
-    // Save original styles
-    const originalMaxWidth = container.style.maxWidth;
-    const originalOverflow = document.body.style.overflow;
+    // Hide buttons temporarily
+    const buttons = receiptCard.querySelector('.payment-buttons');
+    buttons.style.display = 'none';
     
-    // Add receipt mode class for better sizing
-    receiptCard.classList.add('receipt-mode');
-    container.style.maxWidth = '800px';
-    document.body.style.overflow = 'visible';
+    // Get the actual height of the receipt card
+    const actualHeight = receiptCard.scrollHeight;
     
-    // Temporarily hide buttons for screenshot
-    const buttons = receiptCard.querySelectorAll('.payment-buttons');
-    buttons.forEach(btn => btn.style.display = 'none');
+    // Add extra padding to ensure nothing is cut off
+    const captureHeight = actualHeight + 100;
     
-    // Calculate dynamic height based on actual content
-    // Minimum height to ensure all content fits
-    const minHeight = 800;
-    
-    // Base components height
-    const headerHeight = 120;
-    const shopInfoHeight = 80;
-    const itemsHeaderHeight = 50;
-    const tableHeaderHeight = 45;
-    const summaryHeight = 180;
-    const footerHeight = 60;
-    const contentPadding = 40;
-    const itemCountHeight = 30;
-    
-    // Each item row height
-    const itemHeight = 45;
-    
-    // Calculate total based on items
-    const itemsHeight = items.length * itemHeight;
-    
-    // Total calculated height
-    const calculatedHeight = headerHeight + shopInfoHeight + itemsHeaderHeight + 
-                            tableHeaderHeight + itemsHeight + itemCountHeight + 
-                            summaryHeight + footerHeight + contentPadding + 50;
-    
-    // Use the maximum of minimum height or calculated height
-    const finalHeight = Math.max(minHeight, calculatedHeight);
-    
-    // Use setTimeout to ensure DOM is fully rendered with new styles
+    // Wait for DOM to update
     setTimeout(() => {
       html2canvas(receiptCard, {
-        scale: 2.5,
+        scale: 3,
         backgroundColor: '#ffffff',
         logging: false,
         useCORS: true,
         allowTaint: true,
-        foreignObjectRendering: false,
         width: 800,
-        height: finalHeight,
+        height: captureHeight,
         windowWidth: 800,
-        windowHeight: finalHeight,
+        windowHeight: captureHeight,
         scrollY: 0,
         scrollX: 0,
-        onclone: function(clonedDoc) {
-          // Ensure the cloned document has proper dimensions
-          const clonedCard = clonedDoc.getElementById('receiptCard');
-          const clonedContainer = clonedDoc.querySelector('.container');
-          if (clonedCard) {
-            clonedCard.style.minHeight = finalHeight + 'px';
-            clonedCard.style.height = 'auto';
-            clonedCard.style.overflow = 'visible';
-            clonedCard.style.paddingBottom = '20px';
-          }
-          if (clonedContainer) {
-            clonedContainer.style.maxWidth = '800px';
-          }
-        }
+        imageTimeout: 0,
+        removeContainer: true
       }).then(canvas => {
-        // Restore original styles
-        buttons.forEach(btn => btn.style.display = '');
-        receiptCard.classList.remove('receipt-mode');
-        container.style.maxWidth = originalMaxWidth || '480px';
-        document.body.style.overflow = originalOverflow;
+        // Show buttons again
+        buttons.style.display = '';
         
-        // Download image
+        // Download the image
         const link = document.createElement('a');
         link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
@@ -996,15 +907,12 @@
         // Show success message
         document.getElementById("downloadModal").classList.add("active");
       }).catch(error => {
-        // Restore on error
-        buttons.forEach(btn => btn.style.display = '');
-        receiptCard.classList.remove('receipt-mode');
-        container.style.maxWidth = originalMaxWidth || '480px';
-        document.body.style.overflow = originalOverflow;
+        // Show buttons again on error
+        buttons.style.display = '';
         console.error('Screenshot error:', error);
         alert('Error generating receipt. Please try again.');
       });
-    }, 150);
+    }, 200);
   }
   
   function printReceipt() {
