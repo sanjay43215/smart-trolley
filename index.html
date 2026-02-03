@@ -434,6 +434,101 @@
     border-color: #999;
   }
   
+  /* Simple Receipt Styles for Download */
+  .simple-receipt {
+    display: none;
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    background: white;
+    width: 600px;
+    padding: 30px;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .simple-receipt.active {
+    display: block;
+  }
+  
+  .simple-receipt h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;
+  }
+  
+  .simple-receipt .receipt-info {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .simple-receipt .receipt-info p {
+    margin: 5px 0;
+  }
+  
+  .simple-receipt .divider {
+    border-bottom: 2px dashed #333;
+    margin: 15px 0;
+  }
+  
+  .simple-receipt table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+  }
+  
+  .simple-receipt th {
+    text-align: left;
+    padding: 10px 5px;
+    border-bottom: 2px solid #000;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .simple-receipt th:last-child {
+    text-align: right;
+  }
+  
+  .simple-receipt td {
+    padding: 8px 5px;
+    font-size: 14px;
+    color: #000;
+  }
+  
+  .simple-receipt td:last-child {
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  .simple-receipt .total-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #000;
+  }
+  
+  .simple-receipt .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 16px;
+  }
+  
+  .simple-receipt .total-row.grand-total {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px double #000;
+  }
+  
+  .simple-receipt .footer-text {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #666;
+  }
+  
   /* Print Styles */
   @media print {
     body {
@@ -521,251 +616,13 @@
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
-  
-  /* Download mode styles */
-  .download-mode .card {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    border: none !important;
-  }
-  
-  .download-mode .header {
-    background: #fff !important;
-    color: #333 !important;
-    border-bottom: 1px solid #ddd !important;
-    padding: 20px !important;
-  }
-  
-  .download-mode .header h1 {
-    font-size: 28px !important;
-    margin: 0 !important;
-    display: block !important;
-    text-align: center !important;
-    color: #2e7d32 !important;
-  }
-  
-  .download-mode .header .subtitle {
-    display: none !important;
-  }
-  
-  .download-mode .shop-info {
-    background: #fff !important;
-    padding: 15px 20px !important;
-    border-bottom: 1px solid #ddd !important;
-    color: #333 !important;
-  }
-  
-  .download-mode .shop-info p {
-    font-size: 14px !important;
-    color: #333 !important;
-    margin: 5px 0 !important;
-  }
-  
-  .download-mode .shop-info .date-time {
-    font-weight: 600 !important;
-    color: #333 !important;
-  }
-  
-  .download-mode .content {
-    padding: 0 !important;
-  }
-  
-  .download-mode .items-header {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    color: #333 !important;
-    margin-bottom: 15px !important;
-    padding-bottom: 10px !important;
-    border-bottom: 2px solid #2e7d32 !important;
-  }
-  
-  .download-mode .table-wrapper {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: visible !important;
-  }
-  
-  .download-mode table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .download-mode th {
-    padding: 10px 5px !important;
-    text-align: left !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #555 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-  }
-  
-  .download-mode td {
-    padding: 10px 5px !important;
-    font-size: 14px !important;
-    color: #333 !important;
-    word-wrap: break-word !important;
-  }
-  
-  .download-mode .item-name {
-    font-weight: 500 !important;
-    color: #1a1a1a !important;
-  }
-  
-  .download-mode .item-price {
-    font-weight: 600 !important;
-    color: #2e7d32 !important;
-  }
-  
-  .download-mode .summary {
-    background: #fff !important;
-    padding: 15px !important;
-    border-radius: 0 !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .download-mode .summary-row {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 8px 0 !important;
-    font-size: 15px !important;
-  }
-  
-  .download-mode .summary-row.subtotal {
-    color: #666 !important;
-  }
-  
-  .download-mode .summary-row.discount {
-    color: #d32f2f !important;
-  }
-  
-  .download-mode .summary-row.total {
-    border-top: 2px solid #ddd !important;
-    margin-top: 10px !important;
-    padding-top: 15px !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #2e7d32 !important;
-  }
-  
-  .download-mode .item-count {
-    display: none !important;
-  }
-  
-  .download-mode .payment-buttons {
-    display: none !important;
-  }
-  
-  .download-mode .footer {
-    display: none !important;
-  }
-  
-  .download-mode .empty-state {
-    display: none !important;
-  }
-  
-  .download-mode .header-icon {
-    display: none !important;
-  }
-  
-  .download-mode .card {
-    border-radius: 0 !important;
-    overflow: visible !important;
-    border: none !important;
-  }
-  
-  .download-mode .modal {
-    display: none !important;
-  }
-  
-  .download-mode {
-    background: white !important;
-    padding: 0 !important;
-  }
-  
-  /* Receipt layout for print */
-  @media print {
-    .card {
-      border-radius: 0 !important;
-      box-shadow: none !important;
-    }
-    
-    .header {
-      padding: 15px 10px !important;
-    }
-    
-    .header h1 {
-      font-size: 24px !important;
-      margin: 0 !important;
-    }
-    
-    .header .subtitle {
-      font-size: 12px !important;
-      margin-top: 5px !important;
-    }
-    
-    .shop-info {
-      padding: 10px 15px !important;
-      border-bottom: 1px solid #ddd !important;
-    }
-    
-    .items-header {
-      font-size: 18px !important;
-      padding-bottom: 8px !important;
-    }
-    
-    .table-wrapper {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    
-    table {
-      width: 100% !important;
-      border-collapse: collapse !important;
-      margin-bottom: 10px !important;
-    }
-    
-    th {
-      padding: 10px 5px !important;
-      font-size: 14px !important;
-    }
-    
-    td {
-      padding: 10px 5px !important;
-      font-size: 14px !important;
-    }
-    
-    .summary {
-      padding: 15px !important;
-    }
-    
-    .summary-row {
-      font-size: 14px !important;
-      padding: 5px 0 !important;
-    }
-    
-    .summary-row.total {
-      font-size: 20px !important;
-      padding-top: 10px !important;
-    }
-    
-    .payment-buttons {
-      display: none !important;
-    }
-    
-    .footer {
-      display: none !important;
-    }
-  }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="card" id="receiptCard">
     <div class="header">
-      <h1><span class="header-icon">🛒</span> Smart Trolley</h1>
+      <h1>🛒 Smart Trolley</h1>
       <div class="subtitle">Automated Shopping Cart System</div>
     </div>
     
@@ -822,7 +679,7 @@
           </button>
           <button class="btn-secondary" onclick="showQRCode()">
             <span>📱</span>
- <span>Show QR Code</span>
+            <span>Show QR Code</span>
           </button>
           <button class="btn-secondary" onclick="downloadReceipt()">
             <span>⬇️</span>
@@ -839,6 +696,49 @@
     <div class="footer">
       Thank you for shopping with us! 💚
     </div>
+  </div>
+</div>
+
+<!-- Simple Receipt for Download (Hidden) -->
+<div class="simple-receipt" id="simpleReceipt">
+  <h2>SMART TROLLEY</h2>
+  <div class="receipt-info">
+    <p><strong>Smart Retail Store</strong></p>
+    <p id="simpleDateTime"></p>
+    <p>Bill No: #<span id="simpleBillNo"></span></p>
+  </div>
+  
+  <div class="divider"></div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>ITEM</th>
+        <th>PRICE</th>
+      </tr>
+    </thead>
+    <tbody id="simpleItemsBody"></tbody>
+  </table>
+  
+  <div class="divider"></div>
+  
+  <div class="total-section">
+    <div class="total-row" id="simpleSubtotalRow">
+      <span>Subtotal:</span>
+      <span id="simpleSubtotal">₹0</span>
+    </div>
+    <div class="total-row" id="simpleDiscountRow" style="display:none;">
+      <span>Discount:</span>
+      <span id="simpleDiscount">-₹0</span>
+    </div>
+    <div class="total-row grand-total">
+      <span>TOTAL:</span>
+      <span id="simpleTotal">₹0</span>
+    </div>
+  </div>
+  
+  <div class="footer-text">
+    Thank you for shopping with us!
   </div>
 </div>
 
@@ -922,58 +822,25 @@
   const upiId = params.get("upi") || "merchant@upi";
   
   // Initialize bill number and date
-  document.getElementById("billNo").textContent = generateBillNumber();
-  document.getElementById("dateTime").textContent = formatDateTime();
+  const billNumber = generateBillNumber();
+  const dateTime = formatDateTime();
+  
+  document.getElementById("billNo").textContent = billNumber;
+  document.getElementById("dateTime").textContent = dateTime;
+  
+  // Also set for simple receipt
+  document.getElementById("simpleBillNo").textContent = billNumber;
+  document.getElementById("simpleDateTime").textContent = dateTime;
   
   // Process items
   let items = [];
   let subtotal = 0;
   let qrCodeInstance = null;
   
-  // Sample data for demonstration (to ensure multiple items work)
-  if (!itemsParam) {
-    items = [
-      { name: "BlackDairy", price: 120.00 },
-      { name: "FreshFruits", price: 85.50 },
-      { name: "OrganicVegetables", price: 145.75 },
-      { name: "WholeWheatBread", price: 65.25 },
-      { name: "PremiumCoffee", price: 210.00 },
-      { name: "NaturalHoney", price: 95.50 },
-      name: "ExtraVirginOliveOil", price: 320.00 },
-      { name: "ArtisanalCheese", price: 185.00 },
-      { name: "FreshBakeryBread", price: 45.00 },
-      { name: "GourmetChocolate", price: 125.00 }
-    ];
-    
-    subtotal = items.reduce((sum, item) => sum + item.price, 0);
-    const discount = subtotal * 0.1; // 10% discount
-    const finalTotal = subtotal - discount;
-    
-    // Update UI
-    document.getElementById("itemCount").textContent = 
-      `${items.length} items in cart`;
-    document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(2)}`;
-    document.getElementById("discountRow").style.display = "flex";
-    document.getElementById("discount").textContent = `-₹${discount.toFixed(2)}`;
-    document.getElementById("totalAmount").textContent = `₹${finalTotal.toFixed(2)}`;
-    
-    // Add items to table
-    const tbody = document.getElementById("billBody");
-    items.forEach((item, index) => {
-      const row = document.createElement("tr");
-      row.style.animation = `slideUp 0.3s ease-out ${index * 0.05}s backwards`;
-      row.innerHTML = `
-        <td class="item-name">${item.name}</td>
-        <td class="item-price">₹${item.price.toFixed(2)}</td>
-      `;
-      tbody.appendChild(row);
-    });
-    
-    document.getElementById("itemsSection").style.display = "block";
-    document.getElementById("emptyState").style.display = "none";
-  } else {
+  if (itemsParam) {
     const itemList = itemsParam.split(",");
     const tbody = document.getElementById("billBody");
+    const simpleTbody = document.getElementById("simpleItemsBody");
     
     itemList.forEach((item, index) => {
       let name = item;
@@ -993,6 +860,7 @@
       items.push({ name, price });
       subtotal += price;
       
+      // Main card
       const row = document.createElement("tr");
       row.style.animation = `slideUp 0.3s ease-out ${index * 0.05}s backwards`;
       row.innerHTML = `
@@ -1000,6 +868,14 @@
         <td class="item-price">₹${price.toFixed(2)}</td>
       `;
       tbody.appendChild(row);
+      
+      // Simple receipt
+      const simpleRow = document.createElement("tr");
+      simpleRow.innerHTML = `
+        <td>${name}</td>
+        <td>₹${price.toFixed(2)}</td>
+      `;
+      simpleTbody.appendChild(simpleRow);
     });
     
     // Update UI
@@ -1008,15 +884,25 @@
     document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById("totalAmount").textContent = `₹${totalParam.toFixed(2)}`;
     
+    // Update simple receipt
+    document.getElementById("simpleSubtotal").textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById("simpleTotal").textContent = `₹${totalParam.toFixed(2)}`;
+    
     // Calculate and show discount if applicable
     const discount = subtotal - totalParam;
     if (discount > 0) {
       document.getElementById("discountRow").style.display = "flex";
       document.getElementById("discount").textContent = `-₹${discount.toFixed(2)}`;
+      
+      document.getElementById("simpleDiscountRow").style.display = "flex";
+      document.getElementById("simpleDiscount").textContent = `-₹${discount.toFixed(2)}`;
     }
     
     document.getElementById("itemsSection").style.display = "block";
     document.getElementById("emptyState").style.display = "none";
+  } else {
+    document.getElementById("itemsSection").style.display = "none";
+    document.getElementById("emptyState").style.display = "block";
   }
   
   // Functions
@@ -1129,7 +1015,7 @@
       
       // Download the image
       const link = document.createElement('a');
-      link.download = `smart-trolley-qr-${document.getElementById("billNo").textContent}.png`;
+      link.download = `smart-trolley-qr-${billNumber}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -1142,77 +1028,44 @@
   }
   
   function downloadReceipt() {
-    const receiptCard = document.getElementById("receiptCard");
+    const simpleReceipt = document.getElementById("simpleReceipt");
     
-    // Hide buttons temporarily
-    const buttons = receiptCard.querySelector('.payment-buttons');
-    buttons.style.display = 'none';
+    // Show simple receipt
+    simpleReceipt.classList.add('active');
     
-    // Save original styles
-    const originalOverflow = receiptCard.style.overflow;
-    const originalBorderRadius = receiptCard.style.borderRadius;
-    const originalBoxShadow = receiptCard.style.boxShadow;
-    const originalBackground = document.body.style.background;
-    
-    // Add download mode class
-    document.body.classList.add('download-mode');
-    
-    // Temporarily adjust styles for clean capture
-    receiptCard.style.overflow = 'visible';
-    receiptCard.style.borderRadius = '0';
-    receiptCard.style.boxShadow = 'none';
-    document.body.style.background = '#fff';
-    
-    // Force a reflow to ensure styles are applied
-    void receiptCard.offsetWidth;
-    
-    // Get the actual height of the receipt card
-    const actualHeight = receiptCard.scrollHeight;
-    
-    // Add extra padding to ensure nothing is cut off
+    // Get actual height
+    const actualHeight = simpleReceipt.scrollHeight;
     const captureHeight = actualHeight + 100;
     
-    // Wait for DOM to update
+    // Wait for DOM update
     setTimeout(() => {
-      html2canvas(receiptCard, {
+      html2canvas(simpleReceipt, {
         scale: 3,
         backgroundColor: '#ffffff',
         logging: false,
         useCORS: true,
         allowTaint: true,
-        width: 800,
+        width: 600,
         height: captureHeight,
-        windowWidth: 800,
+        windowWidth: 600,
         windowHeight: captureHeight,
         scrollY: 0,
-        scrollX: 0,
-        imageTimeout: 0,
-        removeContainer: true
+        scrollX: 0
       }).then(canvas => {
-        // Restore original styles
-        receiptCard.style.overflow = originalOverflow;
-        receiptCard.style.borderRadius = originalBorderRadius;
-        receiptCard.style.boxShadow = originalBoxShadow;
-        document.body.style.background = originalBackground;
-        buttons.style.display = '';
-        document.body.classList.remove('download-mode');
+        // Hide simple receipt
+        simpleReceipt.classList.remove('active');
         
         // Download the image
         const link = document.createElement('a');
-        link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
+        link.download = `smart-trolley-receipt-${billNumber}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
         
         // Show success message
         document.getElementById("downloadModal").classList.add("active");
       }).catch(error => {
-        // Restore original styles on error
-        receiptCard.style.overflow = originalOverflow;
-        receiptCard.style.borderRadius = originalBorderRadius;
-        receiptCard.style.boxShadow = originalBoxShadow;
-        document.body.style.background = originalBackground;
-        buttons.style.display = '';
-        document.body.classList.remove('download-mode');
+        // Hide simple receipt on error
+        simpleReceipt.classList.remove('active');
         console.error('Screenshot error:', error);
         alert('Error generating receipt. Please try again.');
       });
