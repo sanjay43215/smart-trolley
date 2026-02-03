@@ -50,7 +50,7 @@
   }
   
   .card.receipt-mode {
-    min-height: 1000px;
+    min-height: auto;
     max-width: 800px;
   }
   
@@ -910,52 +910,76 @@
     const receiptCard = document.getElementById("receiptCard");
     const container = document.querySelector(".container");
     
+    // Save original styles
+    const originalMaxWidth = container.style.maxWidth;
+    const originalOverflow = document.body.style.overflow;
+    
     // Add receipt mode class for better sizing
     receiptCard.classList.add('receipt-mode');
     container.style.maxWidth = '800px';
+    document.body.style.overflow = 'visible';
     
     // Temporarily hide buttons for screenshot
     const buttons = receiptCard.querySelectorAll('.payment-buttons');
     buttons.forEach(btn => btn.style.display = 'none');
     
-    // Calculate canvas height based on items (support up to 20 items)
-    const baseHeight = 600;
-    const itemHeight = 50;
-    const totalHeight = Math.max(baseHeight + (items.length * itemHeight), 800);
+    // Calculate dynamic height based on actual content
+    // Base height for header, shop info, summary, footer
+    const baseHeight = 400;
+    // Each item row height (approximate)
+    const itemHeight = 45;
+    // Calculate total height with padding
+    const calculatedHeight = baseHeight + (items.length * itemHeight) + 100;
     
-    html2canvas(receiptCard, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      logging: false,
-      useCORS: true,
-      height: totalHeight,
-      windowHeight: totalHeight,
-      scrollY: -window.scrollY,
-      scrollX: -window.scrollX,
-      allowTaint: true,
-      foreignObjectRendering: false
-    }).then(canvas => {
-      // Restore buttons and original styling
-      buttons.forEach(btn => btn.style.display = '');
-      receiptCard.classList.remove('receipt-mode');
-      container.style.maxWidth = '480px';
-      
-      // Download image
-      const link = document.createElement('a');
-      link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      
-      // Show success message
-      document.getElementById("downloadModal").classList.add("active");
-    }).catch(error => {
-      // Restore on error
-      buttons.forEach(btn => btn.style.display = '');
-      receiptCard.classList.remove('receipt-mode');
-      container.style.maxWidth = '480px';
-      console.error('Screenshot error:', error);
-      alert('Error generating receipt. Please try again.');
-    });
+    // Use setTimeout to ensure DOM is fully rendered with new styles
+    setTimeout(() => {
+      html2canvas(receiptCard, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        foreignObjectRendering: false,
+        width: 800,
+        height: calculatedHeight,
+        windowWidth: 800,
+        windowHeight: calculatedHeight,
+        scrollY: 0,
+        scrollX: 0,
+        onclone: function(clonedDoc) {
+          // Ensure the cloned document has proper dimensions
+          const clonedCard = clonedDoc.getElementById('receiptCard');
+          if (clonedCard) {
+            clonedCard.style.minHeight = calculatedHeight + 'px';
+            clonedCard.style.height = 'auto';
+            clonedCard.style.overflow = 'visible';
+          }
+        }
+      }).then(canvas => {
+        // Restore original styles
+        buttons.forEach(btn => btn.style.display = '');
+        receiptCard.classList.remove('receipt-mode');
+        container.style.maxWidth = originalMaxWidth || '480px';
+        document.body.style.overflow = originalOverflow;
+        
+        // Download image
+        const link = document.createElement('a');
+        link.download = `smart-trolley-receipt-${document.getElementById("billNo").textContent}.png`;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+        
+        // Show success message
+        document.getElementById("downloadModal").classList.add("active");
+      }).catch(error => {
+        // Restore on error
+        buttons.forEach(btn => btn.style.display = '');
+        receiptCard.classList.remove('receipt-mode');
+        container.style.maxWidth = originalMaxWidth || '480px';
+        document.body.style.overflow = originalOverflow;
+        console.error('Screenshot error:', error);
+        alert('Error generating receipt. Please try again.');
+      });
+    }, 100);
   }
   
   function printReceipt() {
