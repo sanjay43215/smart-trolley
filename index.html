@@ -442,7 +442,7 @@
     top: 0;
     background: white;
     width: 600px;
-    padding: 30px;
+    padding: 40px;
     font-family: 'Courier New', monospace;
   }
   
@@ -452,13 +452,14 @@
   
   .simple-receipt h2 {
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 28px;
+    margin-bottom: 25px;
     color: #000;
+    letter-spacing: 2px;
   }
   
   .simple-receipt .receipt-info {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 14px;
     color: #333;
   }
@@ -469,20 +470,20 @@
   
   .simple-receipt .divider {
     border-bottom: 2px dashed #333;
-    margin: 15px 0;
+    margin: 20px 0;
   }
   
   .simple-receipt table {
     width: 100%;
-    margin: 20px 0;
+    margin: 25px 0;
     border-collapse: collapse;
   }
   
   .simple-receipt th {
     text-align: left;
-    padding: 10px 5px;
+    padding: 12px 5px;
     border-bottom: 2px solid #000;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
   }
   
@@ -491,8 +492,8 @@
   }
   
   .simple-receipt td {
-    padding: 8px 5px;
-    font-size: 14px;
+    padding: 10px 5px;
+    font-size: 15px;
     color: #000;
   }
   
@@ -502,30 +503,30 @@
   }
   
   .simple-receipt .total-section {
-    margin-top: 20px;
-    padding-top: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
     border-top: 2px solid #000;
   }
   
   .simple-receipt .total-row {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    font-size: 16px;
+    padding: 10px 0;
+    font-size: 17px;
   }
   
   .simple-receipt .total-row.grand-total {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
     border-top: 2px double #000;
   }
   
   .simple-receipt .footer-text {
     text-align: center;
-    margin-top: 30px;
-    font-size: 14px;
+    margin-top: 40px;
+    font-size: 15px;
     color: #666;
   }
   
@@ -860,7 +861,7 @@
       items.push({ name, price });
       subtotal += price;
       
-      // Main card
+      // Add to MAIN SCREEN TABLE
       const row = document.createElement("tr");
       row.style.animation = `slideUp 0.3s ease-out ${index * 0.05}s backwards`;
       row.innerHTML = `
@@ -869,7 +870,7 @@
       `;
       tbody.appendChild(row);
       
-      // Simple receipt
+      // Add to SIMPLE RECEIPT TABLE (for download)
       const simpleRow = document.createElement("tr");
       simpleRow.innerHTML = `
         <td>${name}</td>
@@ -878,29 +879,33 @@
       simpleTbody.appendChild(simpleRow);
     });
     
-    // Update UI
+    // Update MAIN SCREEN UI
     document.getElementById("itemCount").textContent = 
       `${items.length} item${items.length !== 1 ? 's' : ''} in cart`;
     document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById("totalAmount").textContent = `₹${totalParam.toFixed(2)}`;
     
-    // Update simple receipt
+    // Update SIMPLE RECEIPT
     document.getElementById("simpleSubtotal").textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById("simpleTotal").textContent = `₹${totalParam.toFixed(2)}`;
     
     // Calculate and show discount if applicable
     const discount = subtotal - totalParam;
     if (discount > 0) {
+      // Main screen
       document.getElementById("discountRow").style.display = "flex";
       document.getElementById("discount").textContent = `-₹${discount.toFixed(2)}`;
       
+      // Simple receipt
       document.getElementById("simpleDiscountRow").style.display = "flex";
       document.getElementById("simpleDiscount").textContent = `-₹${discount.toFixed(2)}`;
     }
     
+    // Show items section on main screen
     document.getElementById("itemsSection").style.display = "block";
     document.getElementById("emptyState").style.display = "none";
   } else {
+    // No items - show empty state
     document.getElementById("itemsSection").style.display = "none";
     document.getElementById("emptyState").style.display = "block";
   }
@@ -1030,10 +1035,10 @@
   function downloadReceipt() {
     const simpleReceipt = document.getElementById("simpleReceipt");
     
-    // Show simple receipt
+    // Show simple receipt (it's hidden off-screen)
     simpleReceipt.classList.add('active');
     
-    // Get actual height
+    // Get actual height dynamically
     const actualHeight = simpleReceipt.scrollHeight;
     const captureHeight = actualHeight + 100;
     
