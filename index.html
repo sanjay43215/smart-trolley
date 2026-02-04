@@ -71,6 +71,32 @@
     margin-top: 5px;
   }
   
+  /* Token Number Display - Minimal and Clean */
+  .token-display {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .token-display .label {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  
+  .token-display .number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2e7d32;
+    letter-spacing: 2px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
   .shop-info {
     background: #f8f9fa;
     padding: 15px 20px;
@@ -453,9 +479,30 @@
   .simple-receipt h2 {
     text-align: center;
     font-size: 28px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     color: #000;
     letter-spacing: 2px;
+  }
+  
+  .simple-receipt .token-info {
+    text-align: left;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .simple-receipt .token-info .token-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  
+  .simple-receipt .token-info .token-number {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #000;
   }
   
   .simple-receipt .receipt-info {
@@ -566,6 +613,11 @@
       font-size: 22px;
     }
     
+    .token-display .number {
+      font-size: 18px;
+      letter-spacing: 1.5px;
+    }
+    
     .content {
       padding: 15px;
     }
@@ -625,6 +677,12 @@
     <div class="header">
       <h1>🛒 Smart Trolley</h1>
       <div class="subtitle">Automated Shopping Cart System</div>
+    </div>
+    
+    <!-- TOKEN NUMBER - Minimal and Clean -->
+    <div class="token-display">
+      <div class="label">Token Number</div>
+      <div class="number" id="tokenNumber">001</div>
     </div>
     
     <div class="shop-info">
@@ -703,6 +761,12 @@
 <!-- Simple Receipt for Download (Hidden) -->
 <div class="simple-receipt" id="simpleReceipt">
   <h2>SMART TROLLEY</h2>
+  
+  <div class="token-info">
+    <div class="token-label">Token Number</div>
+    <div class="token-number" id="simpleTokenNumber">001</div>
+  </div>
+  
   <div class="receipt-info">
     <p><strong>Smart Retail Store</strong></p>
     <p id="simpleDateTime"></p>
@@ -748,6 +812,7 @@
   <div class="qr-modal-content">
     <div class="modal-icon">📱</div>
     <h2>Scan QR to Pay</h2>
+    <p style="font-size: 14px; color: #666;">Token: <strong style="color: #2e7d32;" id="qrTokenNumber"></strong></p>
     
     <div class="upi-info">
       UPI ID: <span id="upiDisplay"></span>
@@ -784,6 +849,7 @@
   <div class="modal-content">
     <div class="modal-icon">✅</div>
     <h2>Payment Initiated</h2>
+    <p>Token Number: <strong id="successTokenNumber"></strong></p>
     <p>Opening UPI payment gateway...</p>
     <div class="modal-buttons">
       <button class="btn-primary" onclick="closeModal()">Close</button>
@@ -822,9 +888,18 @@
   const totalParam = parseFloat(params.get("total")) || 0;
   const upiId = params.get("upi") || "merchant@upi";
   
+  // Generate token number (can be passed via URL or auto-generated)
+  const tokenNumber = params.get("token") || generateTokenNumber();
+  
   // Initialize bill number and date
   const billNumber = generateBillNumber();
   const dateTime = formatDateTime();
+  
+  // Set token number everywhere
+  document.getElementById("tokenNumber").textContent = tokenNumber;
+  document.getElementById("simpleTokenNumber").textContent = tokenNumber;
+  document.getElementById("qrTokenNumber").textContent = tokenNumber;
+  document.getElementById("successTokenNumber").textContent = tokenNumber;
   
   document.getElementById("billNo").textContent = billNumber;
   document.getElementById("dateTime").textContent = dateTime;
@@ -911,6 +986,28 @@
   }
   
   // Functions
+  function generateTokenNumber() {
+    // Generate a 3-digit token number
+    // In production, this should be fetched from server/database
+    // For now, use random number or localStorage
+    const storedCounter = localStorage.getItem('tokenCounter');
+    let counter = storedCounter ? parseInt(storedCounter) : 1;
+    
+    // Check if it's a new day, reset counter
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem('tokenDate');
+    if (lastDate !== today) {
+      counter = 1;
+      localStorage.setItem('tokenDate', today);
+    }
+    
+    // Increment and save
+    const token = String(counter).padStart(3, '0');
+    localStorage.setItem('tokenCounter', counter + 1);
+    
+    return token;
+  }
+  
   function generateBillNumber() {
     const date = new Date();
     const random = Math.floor(Math.random() * 10000);
@@ -944,7 +1041,7 @@
       return;
     }
     
-    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Token%20${tokenNumber}%20-%20Smart%20Trolley%20Payment`;
     
     // Show success modal
     document.getElementById("successModal").classList.add("active");
@@ -973,8 +1070,8 @@
     // Clear previous QR code
     document.getElementById("qrcode").innerHTML = "";
     
-    // Generate UPI URL
-    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Smart%20Trolley%20Payment`;
+    // Generate UPI URL with token number in transaction note
+    const upiURL = `upi://pay?pa=${upiId}&pn=SmartTrolley&am=${totalParam.toFixed(2)}&cu=INR&tn=Token%20${tokenNumber}%20-%20Smart%20Trolley%20Payment`;
     
     // Update modal info
     document.getElementById("upiDisplay").textContent = upiId;
@@ -1001,26 +1098,42 @@
   function downloadQRCode() {
     const qrCanvas = document.querySelector("#qrcode canvas");
     if (qrCanvas) {
-      // Create a new canvas with white padding
+      // Create a new canvas with white padding and token number
       const padding = 40;
       const qrSize = qrCanvas.width;
-      const totalSize = qrSize + (padding * 2);
+      const totalWidth = qrSize + (padding * 2);
+      const totalHeight = qrSize + (padding * 2) + 60; // Extra space for token
       
       const canvas = document.createElement('canvas');
-      canvas.width = totalSize;
-      canvas.height = totalSize;
+      canvas.width = totalWidth;
+      canvas.height = totalHeight;
       const ctx = canvas.getContext('2d');
       
       // Fill with white background
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, totalSize, totalSize);
+      ctx.fillRect(0, 0, totalWidth, totalHeight);
+      
+      // Add token number at top (minimal style)
+      ctx.fillStyle = '#666666';
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Token:', totalWidth / 2 - 30, 35);
+      
+      ctx.fillStyle = '#2e7d32';
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText(tokenNumber, totalWidth / 2 + 15, 35);
       
       // Draw QR code in center with padding
-      ctx.drawImage(qrCanvas, padding, padding, qrSize, qrSize);
+      ctx.drawImage(qrCanvas, padding, 60, qrSize, qrSize);
+      
+      // Add amount at bottom
+      ctx.fillStyle = '#000000';
+      ctx.font = 'bold 18px Arial';
+      ctx.fillText(`₹${totalParam.toFixed(2)}`, totalWidth / 2, totalHeight - 15);
       
       // Download the image
       const link = document.createElement('a');
-      link.download = `smart-trolley-qr-${billNumber}.png`;
+      link.download = `smart-trolley-qr-token-${tokenNumber}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -1062,7 +1175,7 @@
         
         // Download the image
         const link = document.createElement('a');
-        link.download = `smart-trolley-receipt-${billNumber}.png`;
+        link.download = `smart-trolley-receipt-token-${tokenNumber}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
         
